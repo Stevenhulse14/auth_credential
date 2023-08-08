@@ -1,11 +1,44 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
 
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+model Account {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @db.ObjectId
+  type      String
+  provider  String
+  providerAccountId String
+  refreshToken String?
+  accessToken String?
+  expiresAt DateTime?
+  id_token String?
+  session_state String?
+  scope String?
+
+  user User @relation(fields: [userId], references: [id])
+
+}
+
+model Session {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String @db.ObjectId
+  expires      DateTime
+  sessionToken String @unique
+  accessToken  String @unique
+  user         User   @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  email     String @unique
+  password  String?
+  image     String?
+  accounts  Account[]
+  sessions  Session[]
 }

@@ -24,3 +24,10 @@ npx prisma init
 
 npm i @prisma/client @auth/prisma-adapter
 -- to install prisma client and prisma adapter
+
+TO CHANGE TO MONGODB DATABASE YOU MUST CHANGE THE `provider = mongodb` IN THE SCHEMA.PRISMA FILE
+
+Ids in mongodb start with `_id` and not `id` so we have to change that .
+To change this `String @id @default(auto()) @map("_id") @db.ObjectId`
+
+`npx prisma generate`
